@@ -1,68 +1,47 @@
 package com.samuel.ApiPokemon.Persistence.model;
 
+import java.util.List;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity 
-@Table (name = "pokemons")
-@Getter 
-@Setter
+@Table (name = "pokemon")
 @NoArgsConstructor 
+@Data 
 public class Pokemon {
 
     @Id 
-    @Column(name = "pokemon_id")
+    @Column(name = "id")
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private Long pokemonId;
+    private Long id;
 
-    @Column(name = "pokemon_nombre")
-    private String pokemonNombre;
+    @Column(name = "name")
+    private String name;
 
     @Column (name = "imagen_url")
-    private String imagenUrl;
+    private String imagen_url;
 
-    @Column (name = "pokemon_tipo")
+    @Column (name = "type")
     private String pokemonTipo;
 
-    // Getters y Setters explícitos
-    /* 
-    public Long getPokemonId() {
-        return pokemonId;
-    }
+    @ManyToOne (fetch = FetchType.LAZY)
+    @JoinColumn (name = "trainer_id", referencedColumnName = "id")
+    private Trainers trainer;
 
-    public void setPokemonId(Long pokemonId) {
-        this.pokemonId = pokemonId;
-    }
-
-    public String getPokemonNombre() {
-        return pokemonNombre;
-    }
-
-    public void setPokemonNombre(String pokemonNombre) {
-        this.pokemonNombre = pokemonNombre;
-    }
-
-    public String getImagenUrl() {
-        return imagenUrl;
-    }
-
-    public void setImagenUrl(String imagenUrl) {
-        this.imagenUrl = imagenUrl;
-    }
-
-    public String getPokemonTipo() {
-        return pokemonTipo;
-    }
-
-    public void setPokemonTipo(String pokemonTipo) {
-        this.pokemonTipo = pokemonTipo;
-    }
-        */
+    @ManyToMany (fetch = FetchType.LAZY)
+    @JoinTable (name = "pokemon_abilities", joinColumns = {@JoinColumn(name = "pokemon_id", referencedColumnName = "id")}
+    , inverseJoinColumns = {@JoinColumn(name = "ability_id", referencedColumnName = "id")})
+    List<Abilities> abilities;
 }

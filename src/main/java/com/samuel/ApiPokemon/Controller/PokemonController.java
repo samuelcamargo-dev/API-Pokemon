@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.samuel.ApiPokemon.Controller.converter.Converter;
 import com.samuel.ApiPokemon.Controller.dto.PokemonDto;
+import com.samuel.ApiPokemon.Controller.dto.PokemonStatsDto;
 import com.samuel.ApiPokemon.Persistence.model.Pokemon;
+import com.samuel.ApiPokemon.Persistence.model.Pokemon_Stats;
 import com.samuel.ApiPokemon.Service.PokemonService;
 
 import lombok.AllArgsConstructor;
@@ -59,5 +61,14 @@ public class PokemonController {
     public ResponseEntity<Void> deletePokemon(@PathVariable Long id) {
         pokemonService.deletePokemon(id);
         return ResponseEntity.noContent().build();          
+    }
+
+    @GetMapping ("/{id}/stats")
+    public ResponseEntity<PokemonStatsDto> getStats(@PathVariable Long id) {
+        Pokemon_Stats stats = pokemonService.getStatsByPokemonId(id);
+        if (stats == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(converter.converterDto(stats));
     }
 }
